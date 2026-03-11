@@ -46,7 +46,7 @@ ensure_bucket_exists() {
 }
 
 pg_dump_database() {
-    pg_dump  --no-owner --no-privileges --clean --if-exists --quote-all-identifiers --exclude-table-data=versions --exclude-table-data=scraped_ads --exclude-table-data=events --exclude-table-data=ahoy_* --exclude-table-data=*journal_entries --exclude-table-data=active_storage_* --exclude-table-data=*_hooks "$DATABASE_URL"
+    pg_dump  --no-owner --no-privileges --clean --if-exists --quote-all-identifiers --exclude-table-data=versions --exclude-table-data=scraped_ads --exclude-table-data=events --exclude-table-data=ahoy_* --exclude-table-data=*journal_entries --exclude-table-data=active_storage_* --exclude-table-data=*_hooks --exclude-table-data=    contact_forms --exclude-table-data=availability_alerts --exclude-table-data=invitations --exclude-table-data=landlord_leads "$DATABASE_URL"
 }
 
 upload_to_bucket() {
