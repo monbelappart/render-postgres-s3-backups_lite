@@ -46,7 +46,30 @@ ensure_bucket_exists() {
 }
 
 pg_dump_database() {
-    pg_dump  --no-owner --no-privileges --clean --if-exists --quote-all-identifiers --exclude-table-data=versions --exclude-table-data=scraped_ads --exclude-table-data=events --exclude-table-data=ahoy_* --exclude-table-data=*journal_entries --exclude-table-data=active_storage_* --exclude-table-data=*_hooks --exclude-table-data=    contact_forms --exclude-table-data=availability_alerts --exclude-table-data=invitations --exclude-table-data=landlord_leads "$DATABASE_URL"
+    # Tables dont on ne sauvegarde que la structure : volumineuses et reconstructibles
+    # (historique PaperTrail, analytics, hooks, pièces jointes…). Un tableau, un motif
+    # par ligne : le shell ne découpe rien et pg_dump reçoit exactement un argument par
+    # exclusion — un espace après le « = » faisait de la table un argument positionnel
+    # (« too many command-line arguments »).
+    local -a exclude=(
+        versions
+        scraped_ads
+        events
+        'ahoy_*'
+        '*journal_entries'
+        'active_storage_*'
+        '*_hooks'
+        contact_forms
+        availability_alerts
+        invitations
+        landlord_leads
+    )
+    local -a args=()
+    local pattern
+    for pattern in "${exclude[@]}"; do
+        args+=("--exclude-table-data=$pattern")
+    done
+    pg_dump --no-owner --no-privileges --clean --if-exists --quote-all-identifiers "${args[@]}" "$DATABASE_URL"
 }
 
 upload_to_bucket() {
