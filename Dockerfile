@@ -1,12 +1,12 @@
-FROM amazon/aws-cli:latest
-ARG POSTGRES_VERSION
+# Version majeure du serveur à sauvegarder. pg_dump refuse de dumper un serveur
+# plus récent que lui (« aborting because of server version mismatch »), donc le
+# client suit le serveur : l'image officielle postgres:<version> embarque le bon.
+# Render transmet la variable d'environnement POSTGRES_VERSION comme build arg.
+ARG POSTGRES_VERSION=18
+FROM postgres:${POSTGRES_VERSION}-alpine
 
-RUN yum update -y \
-    && yum install -y gzip
+RUN apk add --no-cache aws-cli bash gzip
 
 WORKDIR /scripts
-COPY install-pg-dump.sh .
-RUN "/scripts/install-pg-dump.sh"
-
 COPY backup.sh .
 ENTRYPOINT [ "/scripts/backup.sh" ]
