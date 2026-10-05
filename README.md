@@ -8,3 +8,10 @@ Fork this repo and click the button below to deploy.
 
 See the guide at https://render.com/docs/backup-postgresql-to-s3 for more information.
 
+
+## Postgres version
+
+`POSTGRES_VERSION` must match the **major version of the server**: `pg_dump` refuses to dump a
+server newer than itself. The Dockerfile uses it to pick the `postgres:<version>-alpine` base
+image, so changing the variable requires a rebuild of the cron job (Render → Manual Deploy →
+Clear build cache & deploy). Set to `18` since the production upgrade of 2026-10-04.

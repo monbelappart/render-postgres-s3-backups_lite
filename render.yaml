@@ -10,7 +10,7 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: mba-db-prod
+          name: mba-db-prod-pg18
           property: connectionString
       # pick the region closest to your database
       # For example, us-west-2 for the Oregon region
@@ -25,8 +25,8 @@ services:
         sync: false
       - key: AWS_SECRET_ACCESS_KEY
         sync: false
-      # Postgres version of your Postgres instance 
-      # For example, 14
+      # Major version of the Postgres instance (18 since 2026-10-04). Selects the
+      # postgres:<version>-alpine base image, hence the pg_dump version.
       - key: POSTGRES_VERSION
         sync: false
 
